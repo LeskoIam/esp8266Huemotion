@@ -111,6 +111,8 @@ void loop()
   //// Check state of the light and set nigh_time accordingly
   if ((((lights_check_time + lights_check_delay) < millis()) || check_lights_first_loop == 1) && (light_state != 1))
   {
+    Serial.print("Checking state of light ");
+    Serial.println(light);
     check_lights_first_loop = 0;
     if (is_light_on() == 1) { night_time = 0; }
     else { night_time = 1; }
