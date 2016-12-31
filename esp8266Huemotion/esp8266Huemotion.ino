@@ -37,7 +37,6 @@
     - hue_on
     - hue_off
 
-  polensek.matevz@gmail.com
 */
 #include <ESP8266WiFi.h>
 
