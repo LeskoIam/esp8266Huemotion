@@ -17,7 +17,7 @@ It uses PIR sensor attached to pin D1 (arduino library maps this pin to pin 5) t
   * PIR motion sensor ([HC-SR501](http://www.ebay.com/itm/10pcs-HC-SR501-Adjust-IR-Pyroelectric-Infrared-PIR-Motion-Sensor-Detector-Module-/131028677440)).
 
 ## Settings:
-Look for code in "####" block.
+Look for code in "####" block at the begining of code.
 
 * Mandatory:
   * ssid - wifi network name

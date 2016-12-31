@@ -4,7 +4,7 @@
   polensek.matevz@gmail.com
 
   Used instead of very expensive Hue motion sensor.
-  It's basicly a D1 mini, which braks out pins from esp8266 WiFi module and adds some
+  It's basicly a D1 mini, which breaks out pins from esp8266 WiFi module and adds some
   periphery to enable USB serial communication.
 
   Operation:
