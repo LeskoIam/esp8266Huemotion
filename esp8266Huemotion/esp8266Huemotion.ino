@@ -17,7 +17,14 @@
     - If motion is detected. Specified light bulb is turned on for set amount of time
       ("motion_detected_delay"). Motion is still detected and updated when light is turned on,
       this means light is turned off only after no motion is detected for set delay.
-
+  
+  Deep sleep:
+  If enabled, you can put module to sleep while "lights_check_delay" is active. It can conserve
+  a lot of power and is specialy useful when module is powered with batteries. This is controlled
+  with "use_deep_sleep" variable.
+  Minor hardware modification is also necessary. Connect D0 pin to RST pin. This connection is 
+  used to wake up the module after sleep period is over.
+  
   The circuit:
   - Philips Hue lights
   - D1 mini or clone (esp8266).
@@ -26,6 +33,7 @@
   Settings:
   Look for code in #### block.
   Mandatory settings:
+    - use_deep_sleep
     - ssid
     - password
     - bridge_ip, port
@@ -42,6 +50,8 @@
 
 //// Global settings and variables
 // ################################################
+// Deep Sleep
+bool use_deep_sleep = 1;  // If deep sleep is enable don't forget to connect D0 to RST pin
 // Wifi Settings
 const char* ssid = "<your_ssid_name>";
 const char* password = "<your_wifi_password>";
@@ -58,7 +68,7 @@ unsigned long motion_detected_delay = 60*1000;  // Keep light on for that many s
 
 // All lights off check timing
 unsigned long lights_check_time = 0;            // When was light state last checked
-unsigned long lights_check_delay = 5*20*1000;   // Check light state every that many minutes
+unsigned long lights_check_delay = 5*60*1000;   // Check light state every that many minutes
 
 // Commands
 String hue_on = "{\"on\":true, \"bri\":5, \"xy\":[0.1540,0.0806]}";
@@ -72,14 +82,14 @@ int pirPin = 5;
 int light_state = 0;              // Internally track state of light
 int first_loop = 1;               // Is this first loop
 int check_lights_first_loop = 1;  // Same as above but for checking light state
-bool night_time;
+bool night_time;                  // master logic variable
 
 void setup()
 {
   Serial.begin(115200);
   delay(10);
   
-  // Connect to a WiFi network
+  // Connect to WiFi network
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
@@ -98,6 +108,11 @@ void setup()
 
   // Set PIR pin as input pin
   pinMode(pirPin, INPUT);
+  if (use_deep_sleep)
+  {
+    // Connect D0 to RST to wake up
+    pinMode(16, WAKEUP_PULLUP);
+  }
 
   Serial.println("Waiting 2 seconds for stable sensor readings...");
   delay(1000);
@@ -117,7 +132,18 @@ void loop()
     if (is_light_on() == 1) { night_time = 0; }
     else { night_time = 1; }
     lights_check_time = millis();
+    if (use_deep_sleep)
+    {
+      if (!night_time)
+      {
+        // Go to deep sleep. Don't forget to convert milliseconds to microseconds
+        Serial.printf("\nDEEP SLEEP for %i microseconds\n\n", lights_check_delay*1000);
+        ESP.deepSleep(lights_check_delay * 1000);
+      }
+    }
   }
+
+  
 
   // Some debug prints
   Serial.println("-----");
