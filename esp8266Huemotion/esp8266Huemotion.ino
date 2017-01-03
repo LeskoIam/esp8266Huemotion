@@ -234,11 +234,11 @@ bool light_control(String command)
   client.println();
   client.println(command); // PUT COMMAND HERE
 
-  // Wait 5 seconds for server to respond
+  // Wait 10 seconds for server to respond
   unsigned long timeout = millis();
   while (client.available() == 0)
   {
-    if (millis() - timeout > 5000)
+    if (millis() - timeout > 10000)
     {
       Serial.println("ERR>> light_control - Client timeout");
       client.stop();
@@ -282,11 +282,11 @@ bool are_all_lights_on()
   client.println("Host: " + String(bridge_ip) + ":" + String(port));
   client.println("Connection: close");
 
-  // Wait maximum of 5 seconds for server to respond
+  // Wait maximum of 10 seconds for server to respond
   unsigned long timeout = millis();
   while (client.available() == 0)
   {
-    if (millis() - timeout > 5000)
+    if (millis() - timeout > 10000)
     {
       Serial.println("ERR>> are_all_lights_on - Client timeout");
       client.stop();
@@ -331,11 +331,11 @@ bool is_light_on()
   client.println("Host: " + String(bridge_ip) + ":" + String(port));
   client.println("Connection: close");
   
-  // Wait maximum of 5 seconds for server to respond
+  // Wait maximum of 10 seconds for server to respond
   unsigned long timeout = millis();
   while (client.available() == 0)
   {
-    if (millis() - timeout > 5000)
+    if (millis() - timeout > 10000)
     {
       Serial.println("ERR>> is_light_on - Client timeout");
       client.stop();
